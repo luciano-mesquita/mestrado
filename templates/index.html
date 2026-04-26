@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Permear</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <!-- Modal para seleção ou criação de planilha -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3>Selecionar ou Criar Planilha</h3>
+
+            <label for="planilhas-select">Planilhas existentes:</label>
+            <select id="planilhas-select" onchange="alternarCampoNome()">
+                <option value="">-- criar nova --</option>
+            </select>
+
+            <div id="campo-nome-planilha">
+                <label for="nova-planilha">Novo nome (sem .ods):</label>
+                <input type="text" id="nova-planilha" placeholder="ex: log_pressao">
+            </div>
+
+            <label for="responsavel">Responsável:</label>
+            <input type="text" id="responsavel" placeholder="ex: João Silva">
+
+            <label for="coordenadas">Coordenadas:</label>
+            <input type="text" id="coordenadas" placeholder="ex: -12.3456, -38.1234">
+
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" placeholder="ex: Teste em bancada">
+
+
+            <div class="modal-buttons">
+                <button onclick="confirmarEscolha()">Iniciar Medição</button>
+                <button onclick="fecharModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de listagem de planilhas -->
+    <div id="modal-planilhas" class="modal">
+        <div class="modal-content">
+            <h3>Planilhas Disponíveis</h3>
+            <ul id="lista-planilhas"></ul>
+            <div class="modal-buttons">
+                <button onclick="fecharModalPlanilhas()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de configuração do equipamento -->
+    <div id="modal-config" class="modal">
+        <div class="modal-content">
+            <h3>Configurar Equipamento</h3>
+
+            <label for="config-cilindroAr">Volume do cilindro de ar (m³):</label>
+            <input type="number" step="any" id="config-cilindroAr" placeholder="ex: 0.03135">
+
+            <label for="config-alturaCilindro">Altura do cilindro da amostra (m):</label>
+            <input type="number" step="any" id="config-alturaCilindro" placeholder="ex: 0.05">
+
+            <label for="config-diametroCilindro">Diâmetro do cilindro da amostra (m):</label>
+            <input type="number" step="any" id="config-diametroCilindro" placeholder="ex: 0.05">
+
+            <label for="config-pressao">Pressão atmosférica local (Pa):</label>
+            <input type="number" step="any" id="config-pressao" placeholder="ex: 95000">
+
+            <label for="config-pressao-calibracao-max">Pressão de calibração máxima (Pa):</label>
+            <input type="number" step="any" id="config-pressao-calibracao-max" placeholder="ex: 1000">
+
+            <label for="config-pressao-inicial">Pressão inicial para início da medição (Pa):</label>
+            <input type="number" step="any" id="config-pressao-inicial" placeholder="ex: 1100">
+
+            <label for="config-pressao-final">Pressão final para finalização da medição (Pa):</label>
+            <input type="number" step="any" id="config-pressao-final" placeholder="ex: 0">
+
+            <label for="config-tempo-esvaziamento">Tempo de esvaziamento do cilindro (s):</label>
+            <input type="number" step="any" id="config-tempo-esvaziamento" placeholder="ex: 5">
+
+            <label for="config-casas-decimais">Casas decimais no display:</label>
+            <input type="number" step="1" min="0" id="config-casas-decimais" placeholder="ex: 2">
+
+            <label for="config-tempo-offset">Tempo de cálculo de offset (s):</label>
+            <input type="number" step="any" min="1" id="config-tempo-offset" placeholder="ex: 5">
+
+            <div class="modal-buttons">
+                <button onclick="salvarConfiguracoes()">Salvar</button>
+                <button onclick="fecharModalConfig()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Interface principal -->
+    <div class="container">
+        <h2>Pressão (Pa)</h2>
+        <div class="pressure-box">
+            <span id="pressure">---</span>
+        </div>
+        <div id="status-box" class="status-box info">
+            <strong>Status:</strong> <span id="status-text">Sistema pronto.</span>
+            <small id="status-time"></small>
+        </div>
+
+        <div class="buttons">
+            <button id="esvaziar-btn" onclick="esvaziarCilindro()">1 - Esvaziar Cilindro</button>
+            <button onclick="ajustarOffset()">2 - Ajustar Offset</button>
+            <button id="calibrar-btn" onclick="calibrarCilindro()">3 - Calibrar Cilindro</button>
+            <button onclick="iniciarMedicao()">4 - Iniciar Medição</button>
+            <button onclick="finalizarMedicao()">5 - Finalizar Medição</button>
+            <button onclick="abrirModalPlanilhas()">6 - Listar Planilhas</button>
+            <button onclick="abrirModalConfig()">Configurar Equipamento</button>
+            <button onclick="iniciarMedicaoAutomatica()">Iniciar Medição Automática</button>
+            <button onclick="pararMedicaoAutomatica()">Parar Medição Automática</button>
+            <button onclick="reiniciarPermeametro()">Reiniciar Serviço</button>
+            <button onclick="desligarSistema()">Desligar Sistema</button>
+            <!-- <button onclick="window.location.href='/relatorios'">Ver Relatórios</button> -->
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <!-- <canvas id="graficoPressao" width="200" height="40"></canvas> -->
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>
