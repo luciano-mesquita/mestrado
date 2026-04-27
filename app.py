@@ -163,8 +163,15 @@ def start():
     }
 
     dados_medicao = []
-    medindo = True
     try:
+        pressao_inicial_cilindro = ler_pressao_segura()
+        with lock:
+            dados_medicao.append({
+                "tempo": 1,
+                "pressao": pressao_inicial_cilindro
+            })
+
+        medindo = True
         registrar_feedback("Medição manual iniciada. Abrindo solenóide...", "info")
         abrir_solenoide()
         registrar_feedback("Solenóide aberta. Coletando pressão manualmente.", "success")
@@ -174,7 +181,7 @@ def start():
         return jsonify({"status": f"Erro ao abrir a solenóide no início da medição manual: {e}"}), 500
 
     def medir():
-        tempo = 1
+        tempo = 2
         while medindo:
             inicio_ciclo = time.perf_counter()
             try:
@@ -280,11 +287,14 @@ def start_auto():
             print("Iniciando medição...")
             registrar_feedback("Iniciando medição automática e abrindo solenóide...", "info")
             medindo = True
+            pressao_inicial_cilindro = ler_pressao_segura()
+            with lock:
+                dados_medicao.append({"tempo": 1, "pressao": pressao_inicial_cilindro})
             # Abrir solenoide aqui para começar o esvaziamento medido
             print("abrindo solenóide...")
             abrir_solenoide() 
             
-            tempo = 1
+            tempo = 2
             while medindo and not automacao_cancelada():
                 inicio_ciclo = time.perf_counter()
                 try:
