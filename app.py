@@ -562,6 +562,8 @@ def carregar_config():
     config.setdefault("janelaLeituraEstabilizacao", 5)
     config.setdefault("variacaoEstabilizacaoPa", 5)
     config.setdefault("timeoutEstabilizacao", 30)
+    config.setdefault("modoCompressorCalibracao", "intervalado")
+    config.setdefault("tempoIntervaloCompressor", 0.3)
     config.setdefault("tempoEsvaziamentoCilindro", 5)
     config.setdefault("casasDecimaisDisplay", 2)
     config.setdefault("tempoCalculoOffset", 5)

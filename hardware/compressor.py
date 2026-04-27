@@ -39,13 +39,16 @@ def desativar_compressor():
 
 # Função para calibrar o cilindro até atingir 1000 Pa
 def calibrar_cilindro(tempo_maximo=120):
-    """Calibra cilindro até a pressão configurada com pulsos de compressor."""
+    """Calibra cilindro até a pressão configurada com modo direto ou intervalado."""
     print("Iniciando calibração do cilindro...")
     config = _carregar_config()
     pressao_calibracao = float(config.get("pressaoCalibracaoMaxima", 1000))
+    modo_compressor = str(config.get("modoCompressorCalibracao", "intervalado")).lower()
+    tempo_intervalo = max(0.05, float(config.get("tempoIntervaloCompressor", 0.3)))
     inicio = time.time()
 
     try:
+        compressor_ligado = False
         while True:
             if time.time() - inicio > tempo_maximo:
                 raise TimeoutError(
@@ -68,11 +71,20 @@ def calibrar_cilindro(tempo_maximo=120):
                 print(f"Pressão calibrada. Alvo de {pressao_calibracao} Pa atingido.")
                 break
 
-            # Aciona em pulsos curtos para evitar overshoot e travamentos
-            ativar_compressor()
-            time.sleep(0.3)
-            desativar_compressor()
-            time.sleep(0.3)
+            if modo_compressor == "direto":
+                if not compressor_ligado:
+                    print("Modo compressor: direto.")
+                    ativar_compressor()
+                    compressor_ligado = True
+                time.sleep(0.1)
+            else:
+                # Aciona em pulsos para evitar overshoot e travamentos
+                print(f"Modo compressor: intervalado ({tempo_intervalo:.2f}s).")
+                ativar_compressor()
+                time.sleep(tempo_intervalo)
+                desativar_compressor()
+                compressor_ligado = False
+                time.sleep(tempo_intervalo)
     finally:
         # Garantia de segurança: compressor sempre desligado ao sair
         desativar_compressor()

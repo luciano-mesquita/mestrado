@@ -15,6 +15,8 @@ CONFIG_DEFAULTS = {
     "pressaoCalibracaoMaxima": 1000,
     "pressaoInicialMedicao": 1100,
     "pressaoFinalMedicao": 0,
+    "modoCompressorCalibracao": "intervalado",
+    "tempoIntervaloCompressor": 0.3,
     "tempoEsvaziamentoCilindro": 5,
     "casasDecimaisDisplay": 2,
     "tempoCalculoOffset": 5
