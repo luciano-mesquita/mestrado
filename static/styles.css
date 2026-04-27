@@ -101,14 +101,17 @@ button:active {
   transform: scale(0.98);
 }
 
-.btn-hardware { background: linear-gradient(135deg, #4f5d75, #445268); }
-.btn-hardware:hover { background: linear-gradient(135deg, #5a6880, #4e5d74); }
+.btn-hardware { background: linear-gradient(135deg, #1f8f4f, #16733f); }
+.btn-hardware:hover { background: linear-gradient(135deg, #28a85d, #1d8a4c); }
 
-.btn-auto { background: linear-gradient(135deg, #5f6b7a, #525d6b); }
-.btn-auto:hover { background: linear-gradient(135deg, #6a7584, #5b6675); }
+.btn-auto { background: linear-gradient(135deg, #1f6fb8, #195a96); }
+.btn-auto:hover { background: linear-gradient(135deg, #2a82ce, #216cb2); }
 
-.btn-system { background: linear-gradient(135deg, #6f7278, #5e6268); }
-.btn-system:hover { background: linear-gradient(135deg, #7b7e84, #696d74); }
+.btn-config { background: linear-gradient(135deg, #d7a310, #b88709); color: #1b1b1b; }
+.btn-config:hover { background: linear-gradient(135deg, #ebb72a, #cb9815); }
+
+.btn-system { background: linear-gradient(135deg, #b5343f, #932730); }
+.btn-system:hover { background: linear-gradient(135deg, #cd414d, #a7313b); }
 
 button:disabled {
   opacity: 0.6;
