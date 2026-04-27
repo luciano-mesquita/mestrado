@@ -294,7 +294,7 @@ def start_auto():
                     time.sleep(0.2)
                     continue
                 config = carregar_config()
-                pressao_inicial = float(config.get("pressaoInicialMedicao", 1100))
+                pressao_max_estabilizacao = float(config.get("pressaoAutoMaxima", 1005))
                 pressao_final = float(config.get("pressaoFinalMedicao", 0))
 
                 # Registra continuamente para evitar "travamento visual" quando a pressão
@@ -305,7 +305,7 @@ def start_auto():
                 
                 # Condição de parada automática: só considera fim após sair da faixa de calibração
                 # e retornar ao limiar final.
-                if pressao <= pressao_final and pressao <= pressao_inicial:
+                if pressao <= pressao_final and pressao <= pressao_max_estabilizacao:
                     medindo = False
 
                 elapsed = time.perf_counter() - inicio_ciclo
@@ -552,7 +552,6 @@ def carregar_config():
     config.setdefault("diametroCilindro", 0.05)
     config.setdefault("pressaoAtmosferica", 95000)
     config.setdefault("pressaoCalibracaoMaxima", 1000)
-    config.setdefault("pressaoInicialMedicao", 1100)
     config.setdefault("pressaoFinalMedicao", 0)
     config.setdefault("pressaoAutoMinima", 995)
     config.setdefault("pressaoAutoMaxima", 1005)

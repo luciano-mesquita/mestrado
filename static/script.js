@@ -353,7 +353,6 @@ function abrirModalConfig() {
       document.getElementById("config-diametroCilindro").value = config.diametroCilindro;
       document.getElementById("config-pressao").value = config.pressaoAtmosferica;
       document.getElementById("config-pressao-calibracao-max").value = config.pressaoCalibracaoMaxima;
-      document.getElementById("config-pressao-inicial").value = config.pressaoInicialMedicao;
       document.getElementById("config-pressao-final").value = config.pressaoFinalMedicao;
       document.getElementById("config-pressao-auto-min").value = config.pressaoAutoMinima;
       document.getElementById("config-pressao-auto-max").value = config.pressaoAutoMaxima;
@@ -379,7 +378,6 @@ function salvarConfiguracoes() {
     diametroCilindro: parseFloat(document.getElementById("config-diametroCilindro").value),
     pressaoAtmosferica: parseFloat(document.getElementById("config-pressao").value),
     pressaoCalibracaoMaxima: parseFloat(document.getElementById("config-pressao-calibracao-max").value),
-    pressaoInicialMedicao: parseFloat(document.getElementById("config-pressao-inicial").value),
     pressaoFinalMedicao: parseFloat(document.getElementById("config-pressao-final").value),
     pressaoAutoMinima: parseFloat(document.getElementById("config-pressao-auto-min").value),
     pressaoAutoMaxima: parseFloat(document.getElementById("config-pressao-auto-max").value),
