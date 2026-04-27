@@ -101,20 +101,14 @@ button:active {
   transform: scale(0.98);
 }
 
-.btn-hardware { background: linear-gradient(135deg, #0f8f8f, #0d7f9b); }
-.btn-hardware:hover { background: linear-gradient(135deg, #10a0a0, #1092b0); }
+.btn-hardware { background: linear-gradient(135deg, #4f5d75, #445268); }
+.btn-hardware:hover { background: linear-gradient(135deg, #5a6880, #4e5d74); }
 
-.btn-manual { background: linear-gradient(135deg, #2f8d46, #1f7a3a); }
-.btn-manual:hover { background: linear-gradient(135deg, #3ba655, #2a8f46); }
+.btn-auto { background: linear-gradient(135deg, #5f6b7a, #525d6b); }
+.btn-auto:hover { background: linear-gradient(135deg, #6a7584, #5b6675); }
 
-.btn-auto { background: linear-gradient(135deg, #6c5ce7, #5845d9); }
-.btn-auto:hover { background: linear-gradient(135deg, #7d6df2, #6753ec); }
-
-.btn-files { background: linear-gradient(135deg, #d98b2b, #c37419); }
-.btn-files:hover { background: linear-gradient(135deg, #eba143, #d98625); }
-
-.btn-system { background: linear-gradient(135deg, #c23c55, #ab2e47); }
-.btn-system:hover { background: linear-gradient(135deg, #d84964, #c33953); }
+.btn-system { background: linear-gradient(135deg, #6f7278, #5e6268); }
+.btn-system:hover { background: linear-gradient(135deg, #7b7e84, #696d74); }
 
 button:disabled {
   opacity: 0.6;
