@@ -56,27 +56,60 @@ def ler_pressao_segura(tentativas=3, atraso=0.1):
             time.sleep(atraso)
     raise RuntimeError(f"Falha na leitura do ADS1115: {ultimo_erro}")
 
-def ler_pressao_segura(tentativas=3, atraso=0.1):
-    """Lê pressão com tolerância a falhas transitórias do I2C."""
-    ultimo_erro = None
-    for _ in range(tentativas):
-        try:
-            return get_pressure()
-        except Exception as e:
-            ultimo_erro = e
-            time.sleep(atraso)
-    raise RuntimeError(f"Falha na leitura do ADS1115: {ultimo_erro}")
+def aguardar_estabilizacao_pressao(automacao_cancelada):
+    """
+    Aguarda a estabilização da pressão para iniciar a medição automática.
+    Critérios:
+    - Pressão deve estar dentro da faixa [min, max] durante a janela.
+    - Oscilação na janela (max - min) deve ser <= variação configurada.
+    """
+    config = carregar_config()
+    pressao_min = float(config.get("pressaoAutoMinima", 995))
+    pressao_max = float(config.get("pressaoAutoMaxima", 1005))
+    janela_s = max(1, int(float(config.get("janelaLeituraEstabilizacao", 5))))
+    variacao_pa = float(config.get("variacaoEstabilizacaoPa", 5))
+    timeout_s = max(1, int(float(config.get("timeoutEstabilizacao", 30))))
 
-def ler_pressao_segura(tentativas=3, atraso=0.1):
-    """Lê pressão com tolerância a falhas transitórias do I2C."""
-    ultimo_erro = None
-    for _ in range(tentativas):
-        try:
-            return get_pressure()
-        except Exception as e:
-            ultimo_erro = e
-            time.sleep(atraso)
-    raise RuntimeError(f"Falha na leitura do ADS1115: {ultimo_erro}")
+    registrar_feedback(
+        f"Aguardando estabilização ({pressao_min:.1f}–{pressao_max:.1f} Pa, janela {janela_s}s, variação ≤ {variacao_pa:.1f} Pa).",
+        "info"
+    )
+
+    inicio_espera = time.time()
+    leituras = []
+
+    while True:
+        if automacao_cancelada():
+            return False, "Medição automática cancelada durante estabilização."
+
+        if time.time() - inicio_espera > timeout_s:
+            return False, (
+                f"Timeout de estabilização atingido ({timeout_s}s). "
+                f"Não foi possível atingir a faixa {pressao_min:.1f}–{pressao_max:.1f} Pa."
+            )
+
+        pressao = ler_pressao_segura()
+        agora = time.time()
+        leituras.append((agora, pressao))
+
+        limite_tempo = agora - janela_s
+        leituras = [(t, p) for t, p in leituras if t >= limite_tempo]
+
+        if len(leituras) < janela_s:
+            time.sleep(1)
+            continue
+
+        valores = [p for _, p in leituras]
+        todos_na_faixa = all(pressao_min <= p <= pressao_max for p in valores)
+        oscilacao = max(valores) - min(valores)
+
+        if todos_na_faixa and oscilacao <= variacao_pa:
+            return True, (
+                f"Pressão estabilizada na faixa {pressao_min:.1f}–{pressao_max:.1f} Pa "
+                f"com oscilação de {oscilacao:.1f} Pa em {janela_s}s."
+            )
+
+        time.sleep(1)
 
 @app.route("/")
 def index():
@@ -130,8 +163,15 @@ def start():
     }
 
     dados_medicao = []
-    medindo = True
     try:
+        pressao_inicial_cilindro = ler_pressao_segura()
+        with lock:
+            dados_medicao.append({
+                "tempo": 1,
+                "pressao": pressao_inicial_cilindro
+            })
+
+        medindo = True
         registrar_feedback("Medição manual iniciada. Abrindo solenóide...", "info")
         abrir_solenoide()
         registrar_feedback("Solenóide aberta. Coletando pressão manualmente.", "success")
@@ -141,7 +181,7 @@ def start():
         return jsonify({"status": f"Erro ao abrir a solenóide no início da medição manual: {e}"}), 500
 
     def medir():
-        tempo = 1
+        tempo = 2
         while medindo:
             inicio_ciclo = time.perf_counter()
             try:
@@ -232,15 +272,29 @@ def start_auto():
             if automacao_cancelada():
                 return
 
+            estabilizado, mensagem_estabilizacao = aguardar_estabilizacao_pressao(automacao_cancelada)
+            if not estabilizado:
+                registrar_feedback(mensagem_estabilizacao, "error")
+                medindo = False
+                try:
+                    fechar_solenoide()
+                except Exception:
+                    pass
+                return
+            registrar_feedback(mensagem_estabilizacao, "success")
+
             # 3. Iniciar a Medição (Captura de dados)
             print("Iniciando medição...")
             registrar_feedback("Iniciando medição automática e abrindo solenóide...", "info")
             medindo = True
+            pressao_inicial_cilindro = ler_pressao_segura()
+            with lock:
+                dados_medicao.append({"tempo": 1, "pressao": pressao_inicial_cilindro})
             # Abrir solenoide aqui para começar o esvaziamento medido
             print("abrindo solenóide...")
             abrir_solenoide() 
             
-            tempo = 1
+            tempo = 2
             while medindo and not automacao_cancelada():
                 inicio_ciclo = time.perf_counter()
                 try:
@@ -250,7 +304,7 @@ def start_auto():
                     time.sleep(0.2)
                     continue
                 config = carregar_config()
-                pressao_inicial = float(config.get("pressaoInicialMedicao", 1100))
+                pressao_max_estabilizacao = float(config.get("pressaoAutoMaxima", 1005))
                 pressao_final = float(config.get("pressaoFinalMedicao", 0))
 
                 # Registra continuamente para evitar "travamento visual" quando a pressão
@@ -261,7 +315,7 @@ def start_auto():
                 
                 # Condição de parada automática: só considera fim após sair da faixa de calibração
                 # e retornar ao limiar final.
-                if pressao <= pressao_final and pressao <= pressao_inicial:
+                if pressao <= pressao_final and pressao <= pressao_max_estabilizacao:
                     medindo = False
 
                 elapsed = time.perf_counter() - inicio_ciclo
@@ -508,8 +562,12 @@ def carregar_config():
     config.setdefault("diametroCilindro", 0.05)
     config.setdefault("pressaoAtmosferica", 95000)
     config.setdefault("pressaoCalibracaoMaxima", 1000)
-    config.setdefault("pressaoInicialMedicao", 1100)
     config.setdefault("pressaoFinalMedicao", 0)
+    config.setdefault("pressaoAutoMinima", 995)
+    config.setdefault("pressaoAutoMaxima", 1005)
+    config.setdefault("janelaLeituraEstabilizacao", 5)
+    config.setdefault("variacaoEstabilizacaoPa", 5)
+    config.setdefault("timeoutEstabilizacao", 30)
     config.setdefault("tempoEsvaziamentoCilindro", 5)
     config.setdefault("casasDecimaisDisplay", 2)
     config.setdefault("tempoCalculoOffset", 5)
