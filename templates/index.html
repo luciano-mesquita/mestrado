@@ -70,11 +70,23 @@
             <label for="config-pressao-calibracao-max">Pressão de calibração máxima (Pa):</label>
             <input type="number" step="any" id="config-pressao-calibracao-max" placeholder="ex: 1000">
 
-            <label for="config-pressao-inicial">Pressão inicial para início da medição (Pa):</label>
-            <input type="number" step="any" id="config-pressao-inicial" placeholder="ex: 1100">
-
             <label for="config-pressao-final">Pressão final para finalização da medição (Pa):</label>
             <input type="number" step="any" id="config-pressao-final" placeholder="ex: 0">
+
+            <label for="config-pressao-auto-min">Pressão mínima para estabilização automática (Pa):</label>
+            <input type="number" step="any" id="config-pressao-auto-min" placeholder="ex: 995">
+
+            <label for="config-pressao-auto-max">Pressão máxima para estabilização automática (Pa):</label>
+            <input type="number" step="any" id="config-pressao-auto-max" placeholder="ex: 1005">
+
+            <label for="config-janela-estabilizacao">Janela de leitura para estabilização (s):</label>
+            <input type="number" step="1" min="1" id="config-janela-estabilizacao" placeholder="ex: 5">
+
+            <label for="config-variacao-estabilizacao">Variação máxima permitida na janela (Pa):</label>
+            <input type="number" step="any" min="0" id="config-variacao-estabilizacao" placeholder="ex: 5">
+
+            <label for="config-timeout-estabilizacao">Timeout para estabilização automática (s):</label>
+            <input type="number" step="1" min="1" id="config-timeout-estabilizacao" placeholder="ex: 30">
 
             <label for="config-tempo-esvaziamento">Tempo de esvaziamento do cilindro (s):</label>
             <input type="number" step="any" id="config-tempo-esvaziamento" placeholder="ex: 5">
