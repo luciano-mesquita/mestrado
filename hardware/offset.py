@@ -63,6 +63,12 @@ def ajustar_offset():
     
     with open(CONFIG_PATH, 'w') as f:
         json.dump(config, f, indent=4)
+
+    try:
+        from hardware.sensor import atualizar_config_global
+        atualizar_config_global()
+    except Exception as e:
+        print(f"Aviso: não foi possível atualizar cache do sensor em RAM: {e}")
     
     print(f"Ponto zero atualizado com sucesso no arquivo de configurações.")
 

@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Permear</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
@@ -70,11 +73,23 @@
             <label for="config-pressao-calibracao-max">Pressão de calibração máxima (Pa):</label>
             <input type="number" step="any" id="config-pressao-calibracao-max" placeholder="ex: 1000">
 
-            <label for="config-pressao-inicial">Pressão inicial para início da medição (Pa):</label>
-            <input type="number" step="any" id="config-pressao-inicial" placeholder="ex: 1100">
-
             <label for="config-pressao-final">Pressão final para finalização da medição (Pa):</label>
             <input type="number" step="any" id="config-pressao-final" placeholder="ex: 0">
+
+            <label for="config-pressao-auto-min">Pressão mínima para estabilização automática (Pa):</label>
+            <input type="number" step="any" id="config-pressao-auto-min" placeholder="ex: 995">
+
+            <label for="config-pressao-auto-max">Pressão máxima para estabilização automática (Pa):</label>
+            <input type="number" step="any" id="config-pressao-auto-max" placeholder="ex: 1005">
+
+            <label for="config-janela-estabilizacao">Janela de leitura para estabilização (s):</label>
+            <input type="number" step="1" min="1" id="config-janela-estabilizacao" placeholder="ex: 5">
+
+            <label for="config-variacao-estabilizacao">Variação máxima permitida na janela (Pa):</label>
+            <input type="number" step="any" min="0" id="config-variacao-estabilizacao" placeholder="ex: 5">
+
+            <label for="config-timeout-estabilizacao">Timeout para estabilização automática (s):</label>
+            <input type="number" step="1" min="1" id="config-timeout-estabilizacao" placeholder="ex: 30">
 
             <label for="config-tempo-esvaziamento">Tempo de esvaziamento do cilindro (s):</label>
             <input type="number" step="any" id="config-tempo-esvaziamento" placeholder="ex: 5">
@@ -105,17 +120,17 @@
         </div>
 
         <div class="buttons">
-            <button id="esvaziar-btn" onclick="esvaziarCilindro()">1 - Esvaziar Cilindro</button>
-            <button onclick="ajustarOffset()">2 - Ajustar Offset</button>
-            <button id="calibrar-btn" onclick="calibrarCilindro()">3 - Calibrar Cilindro</button>
-            <button onclick="iniciarMedicao()">4 - Iniciar Medição</button>
-            <button onclick="finalizarMedicao()">5 - Finalizar Medição</button>
-            <button onclick="abrirModalPlanilhas()">6 - Listar Planilhas</button>
-            <button onclick="abrirModalConfig()">Configurar Equipamento</button>
-            <button onclick="iniciarMedicaoAutomatica()">Iniciar Medição Automática</button>
-            <button onclick="pararMedicaoAutomatica()">Parar Medição Automática</button>
-            <button onclick="reiniciarPermeametro()">Reiniciar Serviço</button>
-            <button onclick="desligarSistema()">Desligar Sistema</button>
+            <button class="btn-hardware" id="esvaziar-btn" onclick="esvaziarCilindro()">1 - Esvaziar Cilindro</button>
+            <button class="btn-hardware" onclick="ajustarOffset()">2 - Ajustar Offset</button>
+            <button class="btn-hardware" id="calibrar-btn" onclick="calibrarCilindro()">3 - Calibrar Cilindro</button>
+            <button class="btn-hardware" onclick="iniciarMedicao()">4 - Iniciar Medição</button>
+            <button class="btn-hardware" onclick="finalizarMedicao()">5 - Finalizar Medição</button>
+            <button class="btn-system" onclick="abrirModalPlanilhas()">6 - Listar Planilhas</button>
+            <button class="btn-system" onclick="abrirModalConfig()">Configurar Equipamento</button>
+            <button class="btn-auto" onclick="iniciarMedicaoAutomatica()">Iniciar Medição Automática</button>
+            <button class="btn-auto" onclick="pararMedicaoAutomatica()">Parar Medição Automática</button>
+            <button class="btn-system" onclick="reiniciarPermeametro()">Reiniciar Serviço</button>
+            <button class="btn-system" onclick="desligarSistema()">Desligar Sistema</button>
             <!-- <button onclick="window.location.href='/relatorios'">Ver Relatórios</button> -->
         </div>
     </div>
