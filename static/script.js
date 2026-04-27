@@ -353,8 +353,12 @@ function abrirModalConfig() {
       document.getElementById("config-diametroCilindro").value = config.diametroCilindro;
       document.getElementById("config-pressao").value = config.pressaoAtmosferica;
       document.getElementById("config-pressao-calibracao-max").value = config.pressaoCalibracaoMaxima;
-      document.getElementById("config-pressao-inicial").value = config.pressaoInicialMedicao;
       document.getElementById("config-pressao-final").value = config.pressaoFinalMedicao;
+      document.getElementById("config-pressao-auto-min").value = config.pressaoAutoMinima;
+      document.getElementById("config-pressao-auto-max").value = config.pressaoAutoMaxima;
+      document.getElementById("config-janela-estabilizacao").value = config.janelaLeituraEstabilizacao;
+      document.getElementById("config-variacao-estabilizacao").value = config.variacaoEstabilizacaoPa;
+      document.getElementById("config-timeout-estabilizacao").value = config.timeoutEstabilizacao;
       document.getElementById("config-tempo-esvaziamento").value = config.tempoEsvaziamentoCilindro;
       document.getElementById("config-casas-decimais").value = config.casasDecimaisDisplay;
       document.getElementById("config-tempo-offset").value = config.tempoCalculoOffset;
@@ -374,8 +378,12 @@ function salvarConfiguracoes() {
     diametroCilindro: parseFloat(document.getElementById("config-diametroCilindro").value),
     pressaoAtmosferica: parseFloat(document.getElementById("config-pressao").value),
     pressaoCalibracaoMaxima: parseFloat(document.getElementById("config-pressao-calibracao-max").value),
-    pressaoInicialMedicao: parseFloat(document.getElementById("config-pressao-inicial").value),
     pressaoFinalMedicao: parseFloat(document.getElementById("config-pressao-final").value),
+    pressaoAutoMinima: parseFloat(document.getElementById("config-pressao-auto-min").value),
+    pressaoAutoMaxima: parseFloat(document.getElementById("config-pressao-auto-max").value),
+    janelaLeituraEstabilizacao: parseInt(document.getElementById("config-janela-estabilizacao").value, 10),
+    variacaoEstabilizacaoPa: parseFloat(document.getElementById("config-variacao-estabilizacao").value),
+    timeoutEstabilizacao: parseInt(document.getElementById("config-timeout-estabilizacao").value, 10),
     tempoEsvaziamentoCilindro: parseFloat(document.getElementById("config-tempo-esvaziamento").value),
     casasDecimaisDisplay: parseInt(document.getElementById("config-casas-decimais").value, 10),
     tempoCalculoOffset: parseFloat(document.getElementById("config-tempo-offset").value)
