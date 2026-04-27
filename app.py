@@ -245,13 +245,7 @@ def start_auto():
             if automacao_cancelada():
                 return
 
-            print("Ajustando offset...")
-            registrar_feedback("Ajustando offset para medição automática...", "info")
-            ajustar_offset()
-            # Pequena pausa para estabilizar a pressão
-            time.sleep(2)
-            if automacao_cancelada():
-                return
+            registrar_feedback("Usando offset atual em RAM para medição automática.", "info")
             
             print("Estabilizando pressão...")
             # Pequena pausa para estabilizar a pressão
